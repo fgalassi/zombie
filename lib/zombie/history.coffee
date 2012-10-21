@@ -161,6 +161,8 @@ class History
       jsdom_opts.features.FetchExternalResources.push "script"
     if @_browser.loadCSS
       jsdom_opts.features.FetchExternalResources.push "css"
+    if @_browser.skipResources
+      jsdom_opts.features.SkipExternalResources = @_browser.skipResources
 
     document = JSDOM.jsdom(null, HTML, jsdom_opts)
 

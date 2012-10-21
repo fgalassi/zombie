@@ -22,7 +22,7 @@
   "dependencies": {
     "eventsource":      "~0.0.5",
     "html5":            "~0.3.8",
-    "jsdom":            "~0.2.15",
+    "jsdom":            "git+https://github.com/tmpvar/jsdom.git#23b3b6c94230f9923f3034b131ea268cf76a6b19",
     "mime":             "~1.2.7",
     "ms":               "~0.1.0",
     "q":                "~0.8.6",

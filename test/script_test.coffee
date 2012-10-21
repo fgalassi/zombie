@@ -359,6 +359,36 @@ describe "Scripts", ->
       assert.equal @browser.document.title, "Zero"
 
 
+  describe "scripts skipped", ->
+    before (done)->
+      brains.get "/script/skipped", (req, res)->
+        res.send """
+        <html>
+          <head>
+            <title>Skip</title>
+            <script src="/script/to-skip-script.js"></script>
+            <script src="/script/to-run-script.js"></script>
+          </head>
+          <body>
+            <span id="to-skip-result">from html</span>
+            <span id="to-run-result">from html</span>
+          </body>
+        </html>
+        """
+      brains.get "/script/to-skip-script.js", (req, res)->
+        res.send "document.getElementById('to-skip-result').innerHTML = 'from js'"
+      brains.get "/script/to-run-script.js", (req, res)->
+        res.send "document.getElementById('to-run-result').innerHTML = 'from js'"
+
+      @browser = new Browser(runScripts: true, skipResources: /to-skip/)
+      @browser.visit "http://localhost:3003/script/skipped", done
+
+    it "should not run the to-skip script", ->
+      assert.equal @browser.text("#to-skip-result"), "from html"
+
+    it "should run the to-run script", ->
+      assert.equal @browser.text("#to-run-result"), "from js"
+
   describe "file:// uri scheme", ->
     before (done)->
       @browser = new Browser()

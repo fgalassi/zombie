@@ -111,12 +111,16 @@ HTML.resourceLoader.load = (element, href, callback)->
           url = URL.parse(href)
         else
           window = element.contentWindow
-          url = @resolve(window.parent.location, href)
+          url = URL.parse(@resolve(window.parent.location, href))
+          if ownerImplementation.hasFeature('SkipExternalResources', URL.format(url))
+            return
           loaded = (response, filename)->
             callback response.body, URL.parse(response.url).pathname
           window.browser.resources.get url, @enqueue(element, loaded, url.pathname)
       else
         url = URL.parse(@resolve(document, href))
+        if ownerImplementation.hasFeature('SkipExternalResources', URL.format(url))
+          return
         loaded = (response, filename)->
           callback.call this, response.body, URL.parse(response.url).pathname
         window.browser.resources.get url, @enqueue(element, loaded, url.pathname)
