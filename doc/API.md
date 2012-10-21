@@ -48,6 +48,8 @@ You can use the following options:
   still view it with `window.console.output`.
 - `site` -- Base URL for all requests.  If set, you can call `visit` with
   relative URL.
+- `skipResources` -- Don't load resources with url matching this field. Accepts
+  string or regular expression. Example: /bad-domain\.com\/.+\\.js$/
 - `waitFor` -- Tells `wait` function how long to wait (in milliseconds) while
   timers fire.  Defaults to 0.5 seconds.
 - `windowName` -- Sets the browser's window.name property; useful when an
