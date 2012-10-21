@@ -242,3 +242,26 @@ describe "IFrame", ->
         it "should select existing window", ->
           assert.equal @browser.windows.get(0), @browser.window
 
+  describe "iframe skipped", ->
+    before (done)->
+      brains.get "/iframe/skipped-content", (req, res)->
+        res.send "<html><body>I should not be loaded</body></html>"
+      brains.get "/iframe/skipped", (req, res)->
+        res.send """
+        <html>
+          <head>
+            <title>Skip</title>
+          </head>
+          <body>
+            <iframe src="/iframe/skipped-content"></iframe>
+          </body>
+        </html>
+        """
+
+      @browser = new Browser
+        skipResources: /^http:\/\/localhost:3003\/iframe\/skipped-content$/
+      @browser.visit "http://localhost:3003/iframe/skipped", done
+
+    it "should not load iframe content", ->
+      iframe = @browser.querySelector("iframe")
+      assert.equal iframe.contentWindow.document.body.textContent, ""

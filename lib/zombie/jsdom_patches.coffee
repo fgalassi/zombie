@@ -142,8 +142,11 @@ HTML.Document.prototype._elementBuilders["iframe"] = (doc, tag)->
   # This is also necessary to prevent JSDOM from messing with window/document
   iframe.setAttribute = (name, value)->
     if name == "src" && value
+      url = URL.resolve(parent.location, value)
+      if doc.implementation.hasFeature("SkipExternalResources", url)
+        return
       # Point IFrame at new location and wait for it to load
-      iframe.contentWindow.location = URL.resolve(parent.location, value)
+      iframe.contentWindow.location = url
       iframe.contentWindow.addEventListener "load", (event)->
         onload = parent.document.createEvent("HTMLEvents")
         onload.initEvent "load", false, false
